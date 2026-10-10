@@ -9,8 +9,18 @@ import kotlinx.serialization.json.JsonNames
 @Serializable
 data class ChatMessageDto(
     val id: String,
-    @SerialName("game_id") val gameId: String,
-    @SerialName("sender_id") @JsonNames("user_id") val senderId: Long,
+
+    @SerialName("game_id")
+    val gameId: String,
+
+    @SerialName("sender_id")
+    @JsonNames("user_id")
+    val senderId: Long,
+
+    val username: String? = null,
+
     val message: String,
-    @SerialName("created_at") val createdAt: String
+
+    @SerialName("created_at")
+    val createdAt: String
 )

@@ -5,6 +5,7 @@ import com.abhinav.caisarra.data.local.entity.GameEntity
 import com.abhinav.caisarra.data.local.entity.RecordStatus
 import com.abhinav.caisarra.data.remote.api.GamesService
 import com.abhinav.caisarra.data.remote.dto.GameHistoryDto
+import com.abhinav.caisarra.data.remote.dto.GameMoveDto
 import java.time.Instant
 
 class RemoteGameRepository(
@@ -17,6 +18,12 @@ class RemoteGameRepository(
         return gamesService.getGameHistory().map { remote ->
             remote.toGameEntity(username)
         }
+    }
+    suspend fun getGameMoves(
+        gameId: String
+    ): List<GameMoveDto> {
+        return gamesService.getGameMoves(gameId)
+            .sortedBy { it.moveNumber }
     }
 
     private fun GameHistoryDto.toGameEntity(

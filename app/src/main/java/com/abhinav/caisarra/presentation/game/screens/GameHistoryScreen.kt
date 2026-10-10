@@ -225,6 +225,15 @@ fun GameHistoryScreen(
                     viewModel.jumpToMove(ply)
                 }
             )
+            if (state.isRegisteredGame) {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                ChatHistorySection(
+                    messages = state.chatMessages,
+                    error = state.chatError,
+                    modifier = Modifier.width(boardSize)
+                )
+            }
             Spacer(modifier = Modifier.height(24.dp))
         }
     }
@@ -480,5 +489,94 @@ private fun MoveCell(
             fontFamily = JetBrainsMono,
             fontSize = 11.sp
         )
+    }
+}
+
+@Composable
+private fun ChatHistorySection(
+    messages: List<com.abhinav.caisarra.data.remote.dto.ChatMessageDto>,
+    error: String?,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(
+                CardBg,
+                RoundedCornerShape(14.dp)
+            )
+            .border(
+                1.dp,
+                BorderColor,
+                RoundedCornerShape(14.dp)
+            )
+            .padding(12.dp)
+    ) {
+        Text(
+            text = "GAME CHAT",
+            color = White,
+            fontFamily = JetBrainsMono,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        when {
+            error != null && messages.isEmpty() -> {
+                Text(
+                    text = error,
+                    color = Secondary,
+                    fontFamily = JetBrainsMono,
+                    fontSize = 11.sp
+                )
+            }
+
+            messages.isEmpty() -> {
+                Text(
+                    text = "No chat messages recorded.",
+                    color = Secondary,
+                    fontFamily = JetBrainsMono,
+                    fontSize = 11.sp
+                )
+            }
+
+            else -> {
+                messages.forEach { message ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 6.dp)
+                    ) {
+                        Text(
+                            text = message.username
+                                ?.takeIf { it.isNotBlank() }
+                                ?: "Player ${message.senderId}",
+                            color = Accent,
+                            fontFamily = JetBrainsMono,
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+
+                        Spacer(
+                            modifier = Modifier.height(3.dp)
+                        )
+
+                        Text(
+                            text = message.message,
+                            color = White,
+                            fontSize = 13.sp
+                        )
+
+                        Text(
+                            text = message.createdAt,
+                            color = Secondary,
+                            fontFamily = JetBrainsMono,
+                            fontSize = 9.sp
+                        )
+                    }
+                }
+            }
+        }
     }
 }
